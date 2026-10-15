@@ -92,6 +92,7 @@ Derivado dos REQ 01–REQ 15, na ordem em que o documento os apresenta:
 ## 5. Perguntas para o engenheiro de requisitos
 
 1. **Captura (REQ 08–REQ 11):** a captura é feita no navegador do usuário (extensão/cliente) ou por navegadores na infraestrutura do Veridit? Quais formatos (PNG/JPEG, MP4/WebM)? Há limite de duração por gravação? Tela e vídeo são modos alternativos ou simultâneos? *(maior impacto arquitetural)*
+   > **Decisão da equipe (15/10):** a captura será feita em navegador controlado pela plataforma (ADR-002). Tela e vídeo foram tratados como tipos alternativos escolhidos ao iniciar o registro (`docs/componentes.md`, seção 2) **[inferência, a confirmar]**.
 2. **Créditos:** quando exatamente os créditos são debitados — por registro iniciado, por registro concluído, ou por tipo de captura (tela vs vídeo)? Existe saldo visível para o usuário e histórico de compras? O que acontece se o usuário não tem créditos suficientes?
 3. **Pagamento:** como o Veridit detecta a confirmação do pagamento (webhook do Mercado Pago / do Pix? polling manual?). QR Code e Pix têm validade? O que ocorre em caso de pagamento parcial, falha ou estorno?
 4. **Relatório (REQ 14):** formato desejado (PDF?) e se é gerado sob demanda ou em lote; o relatório precisa ter valor probatório (carimbo de data/hora, hash dos arquivos, cadeia de custódia)? *(conecta-se à inconsistência 3: o relatório cita apenas imagens, mas REQ 08 permite vídeo)*

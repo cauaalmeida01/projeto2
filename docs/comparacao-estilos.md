@@ -44,15 +44,17 @@ Restrição de contexto (explicitada no AGENTS.md e coerente com D1/D2, que deli
 
 ## 3. Baseado em serviços
 
+> **Correção (15/10):** a versão anterior desta seção avaliou o estilo como se cada serviço tivesse banco próprio e precisasse de sagas. Isso descreve **microsserviços**. Na arquitetura baseada em serviços (Richards & Ford), o sistema é dividido em poucos serviços de domínio de grão grosso (tipicamente 4 a 12), com uma interface de usuário única e, normalmente, **um banco de dados compartilhado** e particionado logicamente por serviço. As transações dentro de um serviço continuam locais (ACID). A avaliação abaixo foi refeita com essa definição.
+
 | Característica do top 4 | Atendimento | Explicação |
 |---|---|---|
-| Segurança | **Médio** | Autenticação centralizada em um serviço de identidade; porém cada fronteira de rede amplia a superfície de ataque e exige mTLS/controle de chamadas entre serviços. |
-| Integridade da evidência | **Médio** | Serviço de evidências dedicado pode centralizar hash/imutabilidade; mas transações que cruzam serviços (compra → crédito → captura — REQ 05→08) exigem sagas/compensação, arriscando inconsistência do rastro. |
-| Confiabilidade da captura | **Forte** | Captura (REQ 08–11) como serviço dedicado e isolado: crash do serviço de captura não derruba consultas (REQ 12/13); escala independente da carga de vídeo. |
-| Modularidade | **Forte** | Módulos viram serviços com fronteiras físicas — a modularidade máxima do domínio, mas paga com orquestração. |
+| Segurança | **Médio–Forte** | Mais de uma unidade implantável aumenta a superfície, mas um API Gateway como ponto único de entrada centraliza a validação de identidade (REQ 01–04, seção 3) e os serviços ficam em rede privada. |
+| Integridade da evidência | **Forte** | O banco compartilhado mantém transações locais para o rastro do registro (Apêndice A: usuário, datas, ids). A captura pode ficar num serviço isolado que sela os arquivos antes que qualquer outra parte do sistema os toque **[inferência]**. |
+| Confiabilidade da captura | **Forte** | A captura (REQ 08–11) vira um serviço próprio: se ele falhar ou ficar sobrecarregado, login, compra e consultas (REQ 01–07, REQ 12–15) continuam funcionando. O serviço pode ser escalado sozinho. |
+| Modularidade | **Forte** | Particionamento por domínio com fronteiras físicas (usuários, créditos/pagamentos, captura, registros), sem a granularidade fina dos microsserviços. |
 
-- **Custo/complexidade/equipe:** custo e complexidade moderados-altos (implantação, rede, contratos, sagas); desafiador para 5 estudantes, mas viável com poucos serviços (2–3).
-- **Riscos:** inconsistência de dados entre serviços (ex.: crédito debitado sem captura concluída); sobrecarga operacional não sustentada por nenhum requisito do documento.
+- **Custo/complexidade/equipe:** custo e complexidade **médios**: 4 a 5 serviços, um banco e um gateway. É viável para 5 estudantes porque não há sagas nem consistência eventual entre bancos.
+- **Riscos:** o banco compartilhado acopla os serviços pelo esquema (mudanças de tabela afetam mais de um serviço). As chamadas entre serviços passam pela rede (ex.: débito de crédito ao iniciar a captura).
 
 ## 4. Microsserviços
 
@@ -112,7 +114,7 @@ Legenda: **F** forte, **M** médio, **W** fraco. Custo/complexidade avaliados pa
 |---|---|---|---|---|---|---|---|---|
 | Camadas | M | M | W | **W** | Baixo | Baixa | Alta | Domínios de D1/D2 atravessam camadas; degrada para mud acoplado |
 | Monólito modular | **F** | **F** | M | **F** | Baixo–Médio | Baixa–Média | Alta | Disciplina de fronteira; escala futura |
-| Baseado em serviços | M | M | **F** | **F** | Médio–Alto | Média–Alta | Baixa–Média | Sagas; inconsistência; operação pesada |
+| Baseado em serviços | M–F | **F** | **F** | **F** | Médio | Média | Média | Acoplamento pelo banco compartilhado; chamadas pela rede |
 | Microsserviços | M | M | **F** | **F** | Alto | Alta | Baixa | Consistência eventual vs. evidência; sobre-engenharia |
 | Orientado a eventos | M | **F** | **F** | **F** | Médio | Média | Média | Idempotência; depuração assíncrona |
 | Microkernel | W | W | M | M | Médio | Média | Alta | Extensibilidade sem demanda |
@@ -135,3 +137,26 @@ Atende **fortemente** as três características de negócio mais críticas: conf
 - **Monólito modular** minimiza risco de execução (5 estudantes, implantação única, transações fortes para consistência da evidência) e maximiza simplicidade operacional; paga o preço de resolver a assincronia da captura (REQ 08–11) com mecanismos internos (fila em memória/banco + workers), que exigem cuidado extra justamente na característica de maior peso técnico.
 - **Orientado a eventos** resolve estruturalmente a assincronia e a rastreabilidade da captura/pagamento (REQ 06–11), mas paga com maior complexidade de depuração, exigência de idempotência e um componente de infraestrutura a mais (broker) — custo que nenhuma característica do documento justifica plenamente na v1.
 - **Síntese para a decisão:** o monólito modular **pode incorporar** princípios de eventos internamente (mensageria local/filas) sem adotar o estilo por inteiro — capturando o melhor dos dois com risco de execução menor. A escolha final (e sua justificativa por ADR, entregável 5) cabe à equipe; se a equipe valorizar simplicidade e evolução gradual, o monólito modular é o caminho; se valorizar robustez assíncrona desde o dia 1 e aceitar o custo de um broker, o orientado a eventos ganha força.
+
+---
+
+## Revisão de 15/10: captura no navegador da plataforma
+
+A comparação acima foi feita antes de a equipe responder à principal lacuna da análise de requisitos (seção 4, item 11; seção 5, pergunta 1): **onde a captura é executada**. Em 15/10 a equipe decidiu que a captura será feita **em um navegador controlado pela própria plataforma** e não no computador do usuário, porque Segurança e Integridade da evidência são as características mais importantes do top 4. A decisão está registrada na `ADR-002`.
+
+Essa decisão muda a avaliação:
+
+- **A captura passa a ser um quantum arquitetural próprio.** Cada sessão de captura ocupa um navegador no servidor, grava vídeo e pode durar vários minutos (REQ 08–09). Ela é pesada, demorada e sujeita a falhas, o que não acontece com cadastro, login, compra ou consulta (REQ 01–07, REQ 12–15). Partes com características tão diferentes pedem unidades de implantação diferentes **[inferência]**.
+- **Monólito modular perde força em Confiabilidade.** Com os navegadores rodando dentro do mesmo processo (ou na mesma unidade de implantação), um vazamento de memória ou um travamento de navegador derruba também login, pagamento e consulta. Para evitar isso seria preciso tirar a captura do monólito, e o resultado já seria uma arquitetura baseada em serviços.
+- **Orientado a eventos continua caro para a v1.** Ele resolve a assincronia, mas exige broker externo, idempotência em todos os consumidores e consistência eventual no rastro da evidência, o que vai contra a Integridade.
+- **Microsserviços continuam desproporcionais:** banco por serviço e consistência eventual pioram a Integridade e não são justificados por nenhuma meta de escala do documento.
+
+### Classificação revisada
+
+| Posição | Estilo | Motivo |
+|---|---|---|
+| 1º | **Baseado em serviços** | Isola a captura (Confiabilidade), mantém transações locais no banco compartilhado (Integridade), centraliza a entrada no gateway (Segurança) e divide por domínio (Modularidade), com custo médio. |
+| 2º | Monólito modular | Mais simples, mas a captura no servidor dentro da mesma unidade compromete as demais funções quando falha. |
+| 3º | Orientado a eventos | Bom para a captura assíncrona, porém com custo de broker e consistência eventual. |
+
+A escolha do estilo está registrada na `ADR-003`.
