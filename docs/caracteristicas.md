@@ -56,7 +56,7 @@
 ### 7. Usabilidade (fluxo de captura sem atrito)
 
 - **Definição:** permitir que o usuário realize o ciclo cadastro → compra → captura → exportação com facilidade e sem erros.
-- **Classificação:** **implícita** — **[inferência]** usabilidade não aparece como atributo no documento; a dedução vem da própria estrutura do fluxo em sequência de passos descrita em REQ 05 ("selecionar o pacote... informar os dados de faturamento e realizar o pagamento") e REQ 08–REQ 11 (iniciar/concluir captura), além da grande quantidade de campos de formulário no Apêndice A (dados de faturamento com 12 campos).
+- **Classificação:** **implícita** — **[inferência]** usabilidade não aparece como atributo no documento; a dedução vem da própria estrutura do fluxo em sequência de passos descrita em REQ 05 ("selecionar o pacote... informar os dados de faturamento e realizar o pagamento") e REQ 08–REQ 11 (iniciar/concluir captura), além da grande quantidade de campos de formulário no Apêndice A (dados de faturamento com 11 campos).
 - **Justificativa:** o modelo de negócio depende de o usuário comprar créditos e usá-los para registrar conteúdo (REQ 05). Formulários longos de faturamento (Apêndice A) e operações de captura sensíveis a erro criam atrito direto sobre a receita e sobre a qualidade da evidência produzida. Embora usabilidade seja mais um atributo de UX do que arquitetural, ela influencia decisões como execução da captura no navegador do usuário vs. servido pela plataforma (ver análise, seção 5, pergunta 1).
 - **Risco se não atendida:** abandono no meio do funil de compra (REQ 05) e registros mal feitos, reduzindo receita e qualidade da evidência.
 
@@ -78,7 +78,7 @@
 
 - **Definição:** proteger os dados pessoais coletados (nome, email, CPF, OAB, dados de faturamento) e os conteúdos capturados.
 - **Classificação:** **implícita** — **[inferência]** o Apêndice A prevê coleta explícita de CPF em três entidades (Advogado, Usuário comum, Dados da compra) e o relatório inclui CPF do usuário; o conteúdo capturado é de sites da internet e pode conter dados de terceiros. Nenhum requisito menciona LGPD ou privacidade — a característica é deduzida da legislação aplicável a sistemas brasileiros que tratam CPF.
-- **Justificativa:** coletar e armazenar CPF, dados de endereço completos (12 campos de faturamento — Apêndice A) e mídia de navegação coloca o Veridit como controlador de dados pessoais sensíveis. Isso implica decisões arquiteturais de criptografia, controle de acesso fino (coerente com o atributo de Segurança explícito na seção 3) e eventual retenção/exclusão (pergunta de retenção na análise, seção 5).
+- **Justificativa:** coletar e armazenar CPF, dados de endereço completos (11 campos de faturamento — Apêndice A) e mídia de navegação coloca o Veridit como controlador de dados pessoais sensíveis. Isso implica decisões arquiteturais de criptografia, controle de acesso fino (coerente com o atributo de Segurança explícito na seção 3) e eventual retenção/exclusão (pergunta de retenção na análise, seção 5).
 - **Risco se não atendida:** sanções legais, bloqueio do produto e perda de confiança — especialmente grave porque o público-alvo inclui advogados (D1), que têm sensibilidade elevada a conformidade.
 
 ### 11. Interoperabilidade (integrações externas)
