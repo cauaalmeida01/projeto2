@@ -1,0 +1,169 @@
+@startuml d02-pacotes
+!include _estilo.iuml
+skinparam packageStyle folder
+skinparam package {
+  BackgroundColor<<serviço>> #F1F5F9
+  BackgroundColor<<borda>> #FFFFFF
+  BackgroundColor<<biblioteca>> #E0E7FF
+}
+title Veridit — Diagrama de pacotes UML (módulos)
+
+package veridit {
+
+  package web <<borda>> {
+    package paginas {
+    }
+    package cliente_api {
+    }
+    package componentes_ui {
+    }
+  }
+
+  package gateway <<borda>> {
+    package roteamento {
+    }
+    package validacao_token {
+    }
+    package limitacao_taxa {
+    }
+    package proxy_websocket {
+    }
+  }
+
+  package identidade <<serviço>> {
+    package api {
+    }
+    package aplicacao {
+    }
+    package dominio {
+    }
+    package infraestrutura {
+    }
+  }
+
+  package creditos <<serviço>> {
+    package api {
+    }
+    package aplicacao {
+    }
+    package dominio {
+    }
+    package infraestrutura {
+    }
+  }
+
+  package registros <<serviço>> {
+    package api {
+    }
+    package aplicacao {
+    }
+    package dominio {
+    }
+    package infraestrutura {
+    }
+  }
+
+  package evidencias <<serviço>> {
+    package api {
+    }
+    package aplicacao {
+    }
+    package dominio {
+    }
+    package infraestrutura {
+    }
+  }
+
+  package captura <<serviço>> {
+    package worker {
+    }
+    package navegador {
+    }
+    package artefatos {
+    }
+  }
+
+  package notificacoes <<serviço>> {
+    package consumidores {
+    }
+    package templates {
+    }
+  }
+
+  package auditoria <<serviço>> {
+    package consumidores {
+    }
+    package registro_encadeado {
+    }
+  }
+
+  package compartilhado <<biblioteca>> {
+    package contratos {
+    }
+    package mensageria {
+    }
+    package seguranca {
+    }
+    package observabilidade {
+    }
+  }
+}
+
+' --- camada de borda
+veridit.web.paginas ..> veridit.web.cliente_api
+veridit.web.paginas ..> veridit.web.componentes_ui
+veridit.web.cliente_api ..> veridit.compartilhado.contratos
+veridit.gateway.roteamento ..> veridit.gateway.validacao_token
+veridit.gateway.validacao_token ..> veridit.compartilhado.seguranca
+
+' --- regra de camadas dentro dos serviços (infraestrutura implementa portas do domínio)
+veridit.identidade.api ..> veridit.identidade.aplicacao
+veridit.identidade.aplicacao ..> veridit.identidade.dominio
+veridit.identidade.infraestrutura ..> veridit.identidade.dominio
+
+veridit.creditos.api ..> veridit.creditos.aplicacao
+veridit.creditos.aplicacao ..> veridit.creditos.dominio
+veridit.creditos.infraestrutura ..> veridit.creditos.dominio
+
+veridit.registros.api ..> veridit.registros.aplicacao
+veridit.registros.aplicacao ..> veridit.registros.dominio
+veridit.registros.infraestrutura ..> veridit.registros.dominio
+
+veridit.evidencias.api ..> veridit.evidencias.aplicacao
+veridit.evidencias.aplicacao ..> veridit.evidencias.dominio
+veridit.evidencias.infraestrutura ..> veridit.evidencias.dominio
+
+veridit.captura.worker ..> veridit.captura.navegador
+veridit.captura.worker ..> veridit.captura.artefatos
+veridit.notificacoes.consumidores ..> veridit.notificacoes.templates
+veridit.auditoria.consumidores ..> veridit.auditoria.registro_encadeado
+
+' --- dependências para a biblioteca compartilhada
+veridit.identidade.infraestrutura ..> veridit.compartilhado.mensageria
+veridit.creditos.infraestrutura ..> veridit.compartilhado.mensageria
+veridit.registros.infraestrutura ..> veridit.compartilhado.mensageria
+veridit.evidencias.infraestrutura ..> veridit.compartilhado.mensageria
+veridit.captura.artefatos ..> veridit.compartilhado.mensageria
+veridit.notificacoes.consumidores ..> veridit.compartilhado.mensageria
+veridit.auditoria.consumidores ..> veridit.compartilhado.mensageria
+
+veridit.creditos.aplicacao ..> veridit.compartilhado.contratos
+veridit.registros.aplicacao ..> veridit.compartilhado.contratos
+veridit.evidencias.aplicacao ..> veridit.compartilhado.contratos
+veridit.captura.worker ..> veridit.compartilhado.contratos
+
+' --- organização visual (sem significado semântico)
+veridit.web.componentes_ui -[hidden]down-> veridit.identidade.api
+veridit.gateway.validacao_token -[hidden]down-> veridit.registros.api
+veridit.identidade.dominio -[hidden]down-> veridit.captura.worker
+veridit.registros.dominio -[hidden]down-> veridit.notificacoes.consumidores
+veridit.evidencias.dominio -[hidden]down-> veridit.auditoria.consumidores
+
+note right of veridit.compartilhado
+  Regra de dependência: um serviço nunca
+  importa pacotes de outro serviço. A
+  comunicação usa apenas os contratos
+  (DTOs de API e esquemas de eventos)
+  de compartilhado.contratos.
+end note
+@enduml

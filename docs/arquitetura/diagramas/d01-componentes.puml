@@ -1,0 +1,112 @@
+@startuml d01-componentes
+!include _estilo.iuml
+title Veridit — Diagrama de componentes (estilo baseado em serviços)
+left to right direction
+
+actor "Advogado /\nUsuário comum" as U
+
+rectangle "Borda" {
+  component "C01 Aplicação Web\n(SPA)" as C01
+  component "C02 API Gateway" as C02
+}
+
+package "S1 Identidade e Acesso" {
+  component "C03 Cadastro\nde Usuários" as C03
+  component "C04 Autenticação\ne Sessão" as C04 <<crítico>>
+  component "C05 Recuperação\nde Senha" as C05
+}
+
+package "S2 Créditos e Pagamentos" {
+  component "C06 Catálogo\nde Pacotes" as C06
+  component "C07 Compra\nde Créditos" as C07
+  component "C08 Processamento\nde Pagamentos" as C08 <<crítico>>
+  component "C09 Carteira\nde Créditos" as C09 <<crítico>>
+}
+
+package "S3 Registros" {
+  component "C10 Gestão\nde Registros" as C10
+  component "C11 Orquestrador\nde Captura" as C11 <<crítico>>
+}
+
+package "S4 Captura (workers elásticos)" {
+  component "C12 Motor\nde Captura" as C12 <<crítico>>
+}
+
+package "S5 Evidências" {
+  component "C13 Selagem\nde Evidências" as C13 <<crítico>>
+  component "C14 Repositório\nde Evidências" as C14
+  component "C15 Gerador\nde Relatórios" as C15
+  component "C16 Empacotador\nZIP" as C16
+}
+
+package "S6 Notificações" {
+  component "C17 Notificações\npor E-mail" as C17
+}
+
+package "S7 Auditoria" {
+  component "C18 Trilha\nde Auditoria" as C18
+}
+
+queue "Broker de mensagens\n(eventos e filas)" as MQ
+database "PostgreSQL\n(um esquema por serviço)" as DB
+storage "Armazenamento de objetos\n(S3, bucket WORM)" as OBJ
+
+cloud "Mercado Pago\n(checkout e Pix)" as MP
+cloud "Provedor de e-mail" as SMTP
+cloud "ACT ICP-Brasil\n(carimbo do tempo)" as ACT
+cloud "Sites da internet" as WEB
+
+U --> C01 : usa
+C01 --> C02 : HTTPS / REST\n+ WebSocket
+C02 --> C03 : cadastro
+C02 --> C04 : login / logout\n(JWKS)
+C02 --> C05 : recuperar senha
+C02 --> C07 : comprar créditos
+C02 --> C10 : registros
+C02 --> C16 : download .zip
+C02 --> C15 : relatório
+C02 ..> C12 : stream da sessão\n(WebSocket)
+
+C07 --> C06 : consultar pacote
+C07 --> C08 : iniciar pagamento
+C08 --> MP : preferência / Pix
+MP ..> C08 : webhook
+C08 --> C09 : creditar
+
+C10 --> C11 : iniciar / concluir
+C11 --> C09 : reservar / consumir\n/ estornar (REST)
+C11 --> MQ : CapturaSolicitada
+MQ --> C12 : captura.solicitada
+C12 --> WEB : navega
+C12 --> OBJ : artefatos\n(área temporária)
+C12 --> MQ : CapturaConcluída\n/ CapturaFalhou
+
+MQ --> C13 : CapturaConcluída
+C13 --> ACT : RFC 3161
+C13 --> C14 : gravar selado
+C14 --> OBJ : Object Lock
+C13 --> MQ : EvidênciaSelada
+MQ --> C11 : eventos de captura\ne selagem
+MQ --> C15 : EvidênciaSelada
+C15 --> C16 : relatório
+C16 --> C14 : arquivos
+
+C08 --> MQ : PagamentoConfirmado
+C05 --> MQ : RecuperaçãoSolicitada
+MQ --> C17 : eventos de e-mail
+C17 --> SMTP : envia
+MQ --> C18 : eventos de auditoria
+
+note bottom of DB
+  Usado por S1, S2, S3, S5 e S7,
+  cada um com esquema e usuário
+  próprios (ADR-0010).
+  S4 e S6 não acessam o banco.
+end note
+
+legend right
+  <b>Laranja</b> = componente crítico especificado internamente (6 de 18 = 33%)
+  Linha cheia = chamada síncrona / dependência
+  Linha tracejada = interação iniciada externamente ou streaming
+endlegend
+@enduml

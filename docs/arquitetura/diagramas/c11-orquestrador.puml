@@ -1,0 +1,39 @@
+@startuml c11-orquestrador
+!include _estilo.iuml
+title C11 Orquestrador de Captura — estrutura interna
+left to right direction
+
+component "C10 Gestão\nde Registros" as C10
+interface "IOrquestração\n(iniciar, cancelar)" as IO
+
+component "C11 Orquestrador de Captura" as C11 <<crítico>> {
+  component "Coordenador da Saga\n(máquina de estados)" as saga
+  component "Cliente da Carteira\n(timeout + retentativa)" as cart
+  component "Publicador de\nSolicitações (outbox)" as pub
+  component "Consumidor\nde Eventos" as cons
+  component "Alocador\nde Sessão" as aloc
+  component "Monitor de Prazos\n(timeouts, duração máx.)" as mon
+  component "Repositório do\nEstado da Saga" as repo
+}
+
+component "C09 Carteira\nde Créditos" as C09
+component "C02 API Gateway\n(roteamento WebSocket)" as GW
+queue "Broker" as MQ
+database "Esquema\nregistros" as DB
+
+C10 --> IO
+IO - saga
+
+saga --> cart
+cart --> C09 : reservar / consumir / estornar
+saga --> pub
+pub --> MQ : CapturaSolicitada
+MQ --> cons : SessãoIniciada, CapturaConcluída,\nCapturaFalhou, EvidênciaSelada
+cons --> saga
+saga --> aloc
+aloc --> GW : registrar rota\nsessão → worker
+mon --> saga : expirou / excedeu duração
+saga --> repo
+repo --> DB
+saga --> C10 : atualizar status\ndo registro
+@enduml

@@ -1,0 +1,24 @@
+@startuml c11-estados
+!include _estilo.iuml
+skinparam state {
+  BackgroundColor #FFFFFF
+  BorderColor #334155
+}
+title Estados do registro controlados pela saga (C11)
+
+[*] --> Iniciado : usuário informa URL e título (REQ08)
+Iniciado --> CreditosReservados : reserva ok
+Iniciado --> Recusado : saldo insuficiente
+CreditosReservados --> AguardandoSessao : CapturaSolicitada
+AguardandoSessao --> EmCaptura : SessãoIniciada
+EmCaptura --> Selando : usuário conclui (REQ09 / REQ11)\nCapturaConcluída
+Selando --> Concluido : EvidênciaSelada\n→ consumir créditos\n→ e-mail (REQ10 / REQ11-B)
+AguardandoSessao --> Falhou : timeout
+EmCaptura --> Falhou : CapturaFalhou /\nduração máxima
+Selando --> Falhou : falha definitiva\n(após retentativas)
+EmCaptura --> Cancelado : usuário cancela
+Falhou --> [*] : estornar reserva
+Cancelado --> [*] : estornar reserva
+Recusado --> [*]
+Concluido --> [*]
+@enduml

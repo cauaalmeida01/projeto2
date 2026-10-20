@@ -1,0 +1,47 @@
+@startuml c08-pagamentos
+!include _estilo.iuml
+title C08 Processamento de Pagamentos — estrutura interna
+left to right direction
+
+component "C07 Compra\nde Créditos" as C07
+interface "IPagamento\n(iniciar, consultar)" as IP
+interface "IWebhook\n(notificação do PSP)" as IW
+
+component "C08 Processamento de Pagamentos" as C08 <<crítico>> {
+  component "Controlador\nde Pagamentos" as ctl
+  component "Seletor de\nMétodo" as sel
+  component "Gerador de\nCobrança Pix" as pix
+  interface "GatewayPagamento\n(porta)" as porta
+  component "Adaptador\nMercado Pago" as mp
+  component "Receptor de Webhooks\n(valida assinatura)" as wh
+  component "Processador de Confirmação\n(idempotente)" as conf
+  component "Reconciliador\n(job periódico)" as rec
+  component "Outbox de\nEventos" as out
+}
+
+component "C09 Carteira\nde Créditos" as C09
+cloud "Mercado Pago\n(Checkout e API Pix)" as EXT
+database "Esquema créditos\n(pedidos, pagamentos,\nmensagens processadas)" as DB
+queue "Broker" as MQ
+
+C07 --> IP
+IP - ctl
+EXT ..> IW
+IW - wh
+
+ctl --> sel
+sel --> pix : Pix na plataforma
+sel --> porta : Checkout Mercado Pago
+pix --> porta
+porta - mp
+mp --> EXT : criar preferência /\ncriar pagamento Pix /\nconsultar status
+
+wh --> conf
+rec --> conf : pagamentos pendentes
+conf --> porta : consultar status real
+conf --> DB : pedido = Pago\n(chave de idempotência)
+conf --> C09 : creditar(pedido)
+conf --> out
+out --> DB : evento na mesma transação
+out --> MQ : PagamentoConfirmado
+@enduml

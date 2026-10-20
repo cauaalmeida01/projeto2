@@ -1,0 +1,41 @@
+@startuml c13-selagem
+!include _estilo.iuml
+title C13 Selagem de Evidências — estrutura interna
+left to right direction
+
+queue "Broker" as MQ
+
+component "C13 Selagem de Evidências" as C13 <<crítico>> {
+  component "Consumidor\nCapturaConcluída" as cons
+  component "Verificador de Origem\n(identidade do worker)" as orig
+  component "Calculador de Hash\n(SHA-256)" as hash
+  component "Construtor\nde Manifesto" as man
+  component "Assinador\n(cliente KMS)" as ass
+  component "Cliente de Carimbo\ndo Tempo (RFC 3161)" as ts
+  component "Registro de Custódia\n(eventos encadeados)" as cust
+  component "Publicador de\nEventos (outbox)" as pub
+}
+
+storage "Bucket\ncaptura-temporária" as TMP
+component "C14 Repositório\nde Evidências" as C14
+cloud "KMS / HSM" as KMS
+cloud "ACT ICP-Brasil" as ACT
+database "Esquema\nevidências" as DB
+
+MQ --> cons : CapturaConcluída
+cons --> orig
+orig --> TMP : ler artefatos
+orig --> hash
+hash --> man : hashes, nomes, tamanhos
+man --> ass
+ass --> KMS : assinar manifesto
+ass --> ts
+ts --> ACT : carimbo sobre hash\ndo manifesto
+ts --> C14 : gravar arquivos +\nmanifesto + assinatura + carimbo
+C14 --> DB : metadados da evidência
+cust --> DB : cadeia de custódia
+cons --> cust
+ts --> cust
+ts --> pub
+pub --> MQ : EvidênciaSelada
+@enduml

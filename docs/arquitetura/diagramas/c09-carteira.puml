@@ -1,0 +1,41 @@
+@startuml c09-carteira
+!include _estilo.iuml
+title C09 Carteira de Créditos — estrutura interna
+left to right direction
+
+component "C08 Processamento\nde Pagamentos" as C08
+component "C11 Orquestrador\nde Captura" as C11
+component "C02 API Gateway\n(consulta de saldo)" as GW
+interface "ICarteira\n(creditar, reservar, consumir,\nestornar, consultarSaldo)" as IC
+
+component "C09 Carteira de Créditos" as C09 <<crítico>> {
+  component "API da\nCarteira" as api
+  component "Controle de\nIdempotência" as idem
+  component "Política de Consumo\n(créditos por tipo)" as pol
+  component "Livro-razão\n(somente inserção)" as led
+  component "Projeção de Saldo\n(concorrência otimista)" as sal
+  component "Gerenciador de Reservas\n(expiração por TTL)" as res
+  component "Verificador de\nInvariantes (job)" as inv
+}
+
+component "C06 Catálogo\nde Pacotes" as C06
+database "Esquema créditos\n(lançamentos, saldos,\nreservas)" as DB
+
+C08 --> IC
+C11 --> IC
+GW --> IC
+IC - api
+
+api --> idem
+api --> pol
+pol --> C06 : regras configuradas
+api --> led
+led --> sal : atualiza na mesma transação
+api --> res
+res --> led : ESTORNO_RESERVA\n(reserva expirada)
+inv --> led
+inv --> sal : saldo = soma dos lançamentos?
+led --> DB
+sal --> DB
+idem --> DB
+@enduml

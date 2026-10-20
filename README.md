@@ -1,51 +1,28 @@
 # Veridit — Documentação Arquitetural
 
-Trabalho II de Engenharia de Software I (UFBA), Prof. Eduardo Almeida.
+Trabalho II de Engenharia de Software I (UFBA), Prof. Dr. Eduardo Almeida.
 Equipe: Cauã Marinho, João Ferraz, Davi Araújo, Guilherme Loiola e Pedro Azevedo.
 
 O Veridit é uma plataforma para registrar conteúdo de sites (imagem da tela ou vídeo de navegação) como evidência, com relatório e pacote de arquivos para download.
 
-## Decisões principais
+## Entregas
 
-| ADR | Decisão |
+| Arquivo | Conteúdo |
 |---|---|
-| [ADR-001](docs/adr/ADR-001-top4-caracteristicas.md) | Top 4: Segurança, Integridade da evidência, Confiabilidade da captura, Modularidade |
-| [ADR-002](docs/adr/ADR-002-captura-em-navegador-da-plataforma.md) | Captura em navegador isolado na infraestrutura do Veridit |
-| [ADR-003](docs/adr/ADR-003-estilo-baseado-em-servicos.md) | Estilo baseado em serviços (5 serviços, gateway, banco compartilhado) |
-| [ADR-004](docs/adr/ADR-004-dados-compartilhados-e-evidencias-imutaveis.md) | Banco com esquema por serviço; evidências em armazenamento imutável |
-| [ADR-005](docs/adr/ADR-005-selagem-das-evidencias.md) | Selagem na origem: hash encadeado, manifesto assinado, carimbo de tempo |
-| [ADR-006](docs/adr/ADR-006-autenticacao-centralizada-no-gateway.md) | Autenticação centralizada, token validado no gateway |
-| [ADR-007](docs/adr/ADR-007-pagamentos-por-adaptadores.md) | Pagamentos por adaptadores, créditos só após confirmação do provedor |
-| [ADR-008](docs/adr/ADR-008-comunicacao-assincrona-por-caixa-de-saida.md) | Caixa de saída transacional para e-mails e pedidos entre serviços |
-| [ADR-009](docs/adr/ADR-009-ciclo-de-vida-da-captura.md) | Máquina de estados da captura, com reserva e estorno de créditos |
+| [entregas/veridit-documento-arquitetural.pdf](entregas/veridit-documento-arquitetural.pdf) | Documento arquitetural completo (PDF) |
+| [entregas/veridit-apresentacao-arquitetura.pptx](entregas/veridit-apresentacao-arquitetura.pptx) | Apresentação (PowerPoint) |
+| [entregas/veridit-telas.pdf](entregas/veridit-telas.pdf) | Telas da aplicação |
 
-## Estrutura
+## Documentação
 
-```
-docs/
-├── requisitos/veridit-req.md        documento de requisitos (transcrição)
-├── analise-requisitos.md            Etapa 1
-├── caracteristicas.md               Etapa 2
-├── priorizacao-caracteristicas.md   Etapa 3 (apoio à ADR-001)
-├── comparacao-estilos.md            Etapa 4 (apoio à ADR-003)
-├── componentes.md                   Etapas 5 e 6
-├── adr/                             ADR-001 a ADR-009
-├── taticas.md                       Etapa 8
-├── diagramas/                       componentes, críticos e módulos (.dot, .svg, .png)
-├── telas.md                         Etapa 10
-├── auditoria.md                     Etapa 11 e pendências para o professor
-└── registro-ia/                     registro das interações com IA
-```
+| Caminho | Conteúdo |
+|---|---|
+| [docs/arquitetura/documento-arquitetural.md](docs/arquitetura/documento-arquitetural.md) | Características, top 4, estilo, componentes, diagramas, táticas, rastreabilidade e telas |
+| [docs/arquitetura/adr/](docs/arquitetura/adr/README.md) | ADRs 0001 a 0010 e o modelo padronizado (0000) |
+| [docs/arquitetura/diagramas/](docs/arquitetura/diagramas/) | Fontes PlantUML (`.puml`) e imagens (`.png`, `.svg`) |
+| [docs/requisitos/veridit-req.md](docs/requisitos/veridit-req.md) | Documento de requisitos (transcrição) |
+| [docs/registro-ia/](docs/registro-ia/) | Registro das interações com IA |
 
-## Diagramas
+## Histórico
 
-Os diagramas são gerados com [Graphviz](https://graphviz.org/) a partir dos arquivos `.dot`:
-
-```bash
-cd docs/diagramas
-for f in componentes componentes-criticos modulos; do
-  dot -Tsvg $f.dot -o $f.svg && dot -Tpng -Gdpi=150 $f.dot -o $f.png
-done
-```
-
-![Diagrama de componentes](docs/diagramas/componentes.svg)
+Em 20/10/2026 a documentação foi substituída pela versão refeita pela equipe. A versão anterior (ADR-001 a ADR-009, de 13 e 15/10) continua no histórico do Git.

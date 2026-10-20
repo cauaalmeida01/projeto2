@@ -1,0 +1,44 @@
+@startuml c12-motor-captura
+!include _estilo.iuml
+title C12 Motor de Captura (worker) — estrutura interna
+left to right direction
+
+queue "Broker" as MQ
+component "C02 API Gateway" as GW
+interface "ISessãoRemota\n(WebSocket: quadros ↔ entrada)" as IS
+
+component "C12 Motor de Captura — contêiner efêmero, rede isolada" as C12 <<crítico>> {
+  component "Consumidor de\nSolicitações (prefetch 1)" as cons
+  component "Gerenciador\nde Sessão" as ger
+  component "Navegador Controlado\n(Chromium + Playwright)" as nav
+  component "Ponte de\nStreaming" as str
+  component "Capturador\nde Tela" as tela
+  component "Gravador\nde Vídeo" as vid
+  component "Coletor de Metadados\n(DNS, IP, HTTP, TLS, NTP)" as meta
+  component "Publicador de\nArtefatos" as pub
+  component "Sinal de Vida\n(heartbeat)" as hb
+}
+
+cloud "Sites da internet" as WEB
+cloud "Servidor NTP" as NTP
+storage "Bucket\ncaptura-temporária" as OBJ
+
+MQ --> cons : captura.solicitada
+cons --> ger
+ger --> nav : iniciar / encerrar
+GW --> IS
+IS - str
+str --> nav : cliques e teclas
+nav --> str : quadros da tela
+nav --> WEB : HTTPS
+ger --> tela : capturar (REQ11)
+ger --> vid : gravar / concluir (REQ09)
+tela --> nav
+vid --> nav
+meta --> nav : eventos de rede
+meta --> NTP
+ger --> pub : sessão concluída
+pub --> OBJ : imagens, vídeo,\nmetadados
+pub --> MQ : SessãoIniciada,\nCapturaConcluída / CapturaFalhou
+hb --> MQ : heartbeat
+@enduml

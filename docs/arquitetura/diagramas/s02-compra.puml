@@ -1,0 +1,50 @@
+@startuml s02-compra
+!include _estilo.iuml
+title Fluxo: compra de créditos (REQ05–REQ07)
+autonumber
+
+actor "Usuário" as U
+participant "C01 Web" as W
+participant "C02 Gateway" as G
+participant "C06/C07 Catálogo\ne Compra" as P
+participant "C08 Pagamentos" as PG
+participant "C09 Carteira" as C
+participant "Mercado Pago" as MP
+queue "Broker" as Q
+participant "C17 Notificações" as N
+
+U -> W : escolhe pacote (básico, médio, premium)
+W -> G : GET /pacotes
+G -> P : listar pacotes
+U -> W : dados de faturamento (Apêndice A)
+W -> G : POST /pedidos
+G -> P : criar pedido (Pendente)
+P -> PG : iniciar pagamento(pedido, método)
+
+alt Pagar com Mercado Pago
+  PG -> MP : criar preferência de checkout
+  MP --> PG : URL de checkout
+  PG --> W : redirecionar
+  U -> MP : paga
+else Pagar pela plataforma Veridit (Pix)
+  PG -> MP : criar pagamento Pix
+  MP --> PG : QR Code + código copia-e-cola
+  PG --> W : exibir QR Code / código (expira em 30 min)
+  U -> MP : paga o Pix no app do banco
+end
+
+MP -> PG : webhook (assinado)
+PG -> PG : valida assinatura
+PG -> MP : consultar status do pagamento
+MP --> PG : aprovado
+PG -> PG : idempotência: já processado?
+PG -> C : creditar(pedido)
+PG -> Q : PagamentoConfirmado (outbox)
+Q -> N : PagamentoConfirmado
+N -> U : e-mail de confirmação (REQ07)
+
+note over PG, MP
+  Reconciliador periódico consulta pagamentos
+  pendentes para cobrir webhooks perdidos.
+end note
+@enduml

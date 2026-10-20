@@ -1,0 +1,50 @@
+@startuml s01-registro
+!include _estilo.iuml
+title Fluxo: registro de conteúdo (REQ08–REQ11, REQ14, REQ15)
+autonumber
+
+actor "Usuário" as U
+participant "C01 Web" as W
+participant "C02 Gateway" as G
+participant "S3 Registros\n(C10, C11)" as R
+participant "C09 Carteira" as C
+queue "Broker" as Q
+participant "S4 Captura\n(C12)" as K
+participant "S5 Evidências\n(C13–C16)" as E
+participant "C17 Notificações" as N
+
+U -> W : URL + título
+W -> G : POST /registros (JWT)
+G -> R : criar registro
+R -> C : reservar(idRegistro)
+C --> R : reserva ok
+R -> Q : CapturaSolicitada (outbox)
+R --> W : 202 Aceito (status: Aguardando sessão)
+Q -> K : captura.solicitada
+K -> K : sobe navegador isolado
+K -> Q : SessãoIniciada
+Q -> R : SessãoIniciada
+R -> G : registrar rota da sessão
+W <-> K : stream da tela e entrada (via gateway, WebSocket)
+U -> W : navega / captura tela / grava vídeo
+U -> W : concluir (REQ09 / REQ11)
+W -> K : concluir sessão
+K -> K : grava artefatos e metadados\nno bucket temporário
+K -> Q : CapturaConcluída
+Q -> E : CapturaConcluída
+E -> E : SHA-256 → manifesto → assinatura\n→ carimbo do tempo → WORM
+E -> Q : EvidênciaSelada
+Q -> R : EvidênciaSelada
+R -> C : consumir(idRegistro)
+R -> R : status = Concluído
+Q -> E : gerar relatório e .zip (REQ14, REQ15)
+Q -> N : EvidênciaSelada
+N -> U : e-mail de conclusão (REQ10 / REQ11-B)
+
+group Alternativa: falha ou timeout
+  K -> Q : CapturaFalhou
+  Q -> R : CapturaFalhou
+  R -> C : estornar(idRegistro)
+  R -> R : status = Falhou
+end
+@enduml

@@ -1,0 +1,64 @@
+skinparam shadowing false
+skinparam defaultFontName "Inter"
+skinparam defaultFontSize 12
+skinparam backgroundColor #FFFFFF
+skinparam ArrowColor #475569
+skinparam ArrowFontSize 10
+skinparam ArrowFontColor #334155
+skinparam roundCorner 6
+skinparam nodesep 40
+skinparam ranksep 50
+
+skinparam component {
+  BackgroundColor #FFFFFF
+  BorderColor #334155
+  FontColor #0F172A
+  BackgroundColor<<crítico>> #FDE8D7
+  BorderColor<<crítico>> #C2410C
+  StereotypeFontColor<<crítico>> #9A3412
+}
+skinparam package {
+  BackgroundColor #F1F5F9
+  BorderColor #94A3B8
+  FontColor #1E293B
+  FontStyle bold
+}
+skinparam rectangle {
+  BackgroundColor #F8FAFC
+  BorderColor #94A3B8
+}
+skinparam database {
+  BackgroundColor #E0E7FF
+  BorderColor #4338CA
+}
+skinparam queue {
+  BackgroundColor #E0E7FF
+  BorderColor #4338CA
+}
+skinparam storage {
+  BackgroundColor #E0E7FF
+  BorderColor #4338CA
+}
+skinparam cloud {
+  BackgroundColor #FFFFFF
+  BorderColor #64748B
+  FontColor #334155
+}
+skinparam actor {
+  BackgroundColor #FFFFFF
+  BorderColor #334155
+}
+skinparam interface {
+  BackgroundColor #FFFFFF
+  BorderColor #334155
+}
+skinparam note {
+  BackgroundColor #FEF9C3
+  BorderColor #CA8A04
+}
+skinparam sequence {
+  LifeLineBorderColor #94A3B8
+  ParticipantBackgroundColor #FFFFFF
+  ParticipantBorderColor #334155
+  GroupBackgroundColor #F1F5F9
+}

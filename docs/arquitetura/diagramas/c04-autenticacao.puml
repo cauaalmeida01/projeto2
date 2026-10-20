@@ -1,0 +1,47 @@
+@startuml c04-autenticacao
+!include _estilo.iuml
+title C04 Autenticação e Sessão — estrutura interna
+left to right direction
+
+component "C02 API Gateway" as GW
+interface "IAutenticação\n(login, logout, refresh)" as IA
+interface "JWKS\n(chaves públicas)" as IJ
+
+component "C04 Autenticação e Sessão" as C04 <<crítico>> {
+  component "Controlador de\nAutenticação" as ctl
+  component "Limitador de\nTentativas" as lim
+  component "Verificador de Credenciais\n(Argon2id)" as ver
+  component "Emissor de Tokens\n(JWT, 15 min)" as emi
+  component "Gerenciador de Refresh\nTokens (rotação)" as ref
+  component "Serviço de\nRevogação" as rev
+  component "Publicador\nde Chaves (JWKS)" as jwks
+  component "Emissor de Eventos\nde Segurança" as evt
+}
+
+database "Esquema\nidentidade" as DB
+database "Cache de revogação\ne tentativas" as CACHE
+cloud "KMS" as KMS
+queue "Broker" as MQ
+
+GW --> IA
+IA - ctl
+GW --> IJ
+IJ - jwks
+GW ..> CACHE : consulta jti revogado
+
+ctl --> lim
+ctl --> ver
+ctl --> emi
+ctl --> ref
+ctl --> rev
+ctl --> evt
+
+lim --> CACHE : contadores por IP / conta
+ver --> DB : hash da senha
+ref --> DB : refresh tokens (hash)
+rev --> CACHE : jti revogados
+rev --> ref : revogar família
+emi --> KMS : assinar token
+jwks --> KMS : chave pública
+evt --> MQ : LoginRealizado, LoginFalhou,\nLogoutRealizado, ContaBloqueada
+@enduml
