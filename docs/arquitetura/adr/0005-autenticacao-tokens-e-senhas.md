@@ -2,7 +2,7 @@
 
 - **Status:** Aceita
 - **Data:** 2026-10-15
-- **Decisores:** <nomes da equipe>
+- **Decisores:** Cauã Marinho, João Ferraz, Guilherme Loiola e Davi Araújo
 - **Características arquiteturais relacionadas:** Segurança, Escalabilidade
 - **Requisitos e restrições relacionados:** Atributo de qualidade "Segurança" (acesso só por usuários cadastrados); REQ01 (cadastro), REQ02 (recuperar senha), REQ03 (login), REQ04 (logout); D1 (advogado, usuário comum e, futuramente, empresa)
 

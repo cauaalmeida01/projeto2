@@ -2,7 +2,7 @@
 
 - **Status:** Aceita
 - **Data:** 2026-10-15
-- **Decisores:** <nomes da equipe>
+- **Decisores:** Cauã Marinho, João Ferraz, Guilherme Loiola e Davi Araújo
 - **Características arquiteturais relacionadas:** Segurança, Confiabilidade, Interoperabilidade
 - **Requisitos e restrições relacionados:** REQ05 (comprar créditos), REQ06 (pagamento pelo Mercado Pago ou pela plataforma, com QR Code/código Pix), REQ07 (e-mail de confirmação); D2 (pacotes); Apêndice A (dados de faturamento)
 

@@ -2,7 +2,7 @@
 
 - **Status:** Aceita
 - **Data:** 2026-10-15
-- **Decisores:** <nomes da equipe>
+- **Decisores:** Cauã Marinho, João Ferraz, Guilherme Loiola e Davi Araújo
 - **Características arquiteturais relacionadas:** Escalabilidade (elasticidade), Disponibilidade, Custo
 - **Requisitos e restrições relacionados:** REQ08–REQ11 (captura de tela e vídeo)
 

@@ -2,7 +2,7 @@
 
 - **Status:** Aceita
 - **Data:** 2026-10-15
-- **Decisores:** <nomes da equipe>
+- **Decisores:** Cauã Marinho, João Ferraz, Guilherme Loiola e Davi Araújo
 - **Características arquiteturais relacionadas:** Confiabilidade, Integridade (dos dados financeiros), Auditabilidade
 - **Requisitos e restrições relacionados:** REQ05 (comprar créditos), REQ06 (pagamento), REQ08 (iniciar registro consome créditos); D2 (pacotes)
 

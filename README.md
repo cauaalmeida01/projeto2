@@ -1,7 +1,7 @@
 # Veridit — Documentação Arquitetural
 
 Trabalho II de Engenharia de Software I (UFBA), Prof. Dr. Eduardo Almeida.
-Equipe: Cauã Marinho, João Ferraz, Davi Araújo, Guilherme Loiola e Pedro Azevedo.
+Equipe: Cauã Marinho, João Ferraz, Guilherme Loiola e Davi Araújo.
 
 O Veridit é uma plataforma para registrar conteúdo de sites (imagem da tela ou vídeo de navegação) como evidência, com relatório e pacote de arquivos para download.
 
@@ -25,4 +25,4 @@ O Veridit é uma plataforma para registrar conteúdo de sites (imagem da tela ou
 
 ## Histórico
 
-Em 20/10/2026 a documentação foi substituída pela versão refeita pela equipe. A versão anterior (ADR-001 a ADR-009, de 13 e 15/10) continua no histórico do Git.
+Em 20/10/2026 a documentação foi substituída pela versão refeita pela equipe. A versão anterior, que usava outra numeração de ADRs e não vale mais, só existe no histórico do Git (commits de 13 e 15/10).

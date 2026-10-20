@@ -2,7 +2,7 @@
 
 - **Status:** Aceita
 - **Data:** 2026-10-15
-- **Decisores:** <nomes da equipe>
+- **Decisores:** Cauã Marinho, João Ferraz, Guilherme Loiola e Davi Araújo
 - **Características arquiteturais relacionadas:** Segurança (privacidade), Manutenibilidade, Recuperabilidade, Integridade
 - **Requisitos e restrições relacionados:** Apêndice A (dados de usuários, compras e registros); REQ12–REQ15 (consultas, relatório e .zip)
 

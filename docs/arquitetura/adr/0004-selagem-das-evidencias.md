@@ -2,7 +2,7 @@
 
 - **Status:** Aceita
 - **Data:** 2026-10-15
-- **Decisores:** <nomes da equipe>
+- **Decisores:** Cauã Marinho, João Ferraz, Guilherme Loiola e Davi Araújo
 - **Características arquiteturais relacionadas:** Integridade e autenticidade das evidências, Auditabilidade, Segurança
 - **Requisitos e restrições relacionados:** REQ09, REQ11 (conclusão da captura), REQ13 (detalhes), REQ14 (relatório com nome e tamanho dos arquivos), REQ15 (.zip); Apêndice A (campos do relatório)
 

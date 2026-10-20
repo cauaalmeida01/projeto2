@@ -2,7 +2,7 @@
 
 - **Status:** Aceita
 - **Data:** 2026-10-15
-- **Decisores:** <nomes da equipe>
+- **Decisores:** Cauã Marinho, João Ferraz, Guilherme Loiola e Davi Araújo
 - **Características arquiteturais relacionadas:** Integridade e autenticidade das evidências, Segurança, Escalabilidade
 - **Requisitos e restrições relacionados:** REQ08 (iniciar registro: tela ou vídeo de navegação), REQ09 (concluir gravação), REQ11 (concluir captura de tela), REQ14 (relatório com URL e site)
 

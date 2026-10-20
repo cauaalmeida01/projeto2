@@ -2,7 +2,7 @@
 
 - **Status:** Aceita
 - **Data:** 2026-10-15
-- **Decisores:** <nomes da equipe>
+- **Decisores:** Cauã Marinho, João Ferraz, Guilherme Loiola e Davi Araújo
 - **Características arquiteturais relacionadas:** Segurança, Integridade/Autenticidade das evidências, Confiabilidade, Escalabilidade (elasticidade da captura)
 - **Requisitos e restrições relacionados:** Atributo de qualidade "Segurança"; REQ01–REQ04 (acesso); REQ05–REQ07 (créditos e pagamento); REQ08–REQ11 (captura); REQ14–REQ15 (relatório e .zip); D1 (advogados como público)
 

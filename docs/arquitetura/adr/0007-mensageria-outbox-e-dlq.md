@@ -2,7 +2,7 @@
 
 - **Status:** Aceita
 - **Data:** 2026-10-15
-- **Decisores:** <nomes da equipe>
+- **Decisores:** Cauã Marinho, João Ferraz, Guilherme Loiola e Davi Araújo
 - **Características arquiteturais relacionadas:** Confiabilidade, Escalabilidade, Disponibilidade
 - **Requisitos e restrições relacionados:** REQ05–REQ07 (compra → crédito → e-mail), REQ08–REQ11 (registro → captura → selagem → e-mail), REQ10, REQ11-B
 

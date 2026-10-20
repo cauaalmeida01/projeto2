@@ -2,7 +2,7 @@
 
 - **Status:** Aceita
 - **Data:** 2026-10-15
-- **Decisores:** <nomes da equipe>
+- **Decisores:** Cauã Marinho, João Ferraz, Guilherme Loiola e Davi Araújo
 - **Características arquiteturais relacionadas:** Segurança, Integridade, Confiabilidade, Escalabilidade (top 4, ADR-0001); Manutenibilidade; Custo
 - **Requisitos e restrições relacionados:** REQ01–REQ15; restrições do projeto: equipe pequena, prazo acadêmico, etapas futuras de implementação e evolução
 

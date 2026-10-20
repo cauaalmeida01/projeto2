@@ -2,8 +2,8 @@
 
 **Disciplina:** Engenharia de Software I — Trabalho II
 **Professor:** Dr. Eduardo Almeida
-**Equipe:** <nomes da equipe>
-**Versão:** 1.0 — 15/10/2026
+**Equipe:** Cauã Marinho, João Ferraz, Guilherme Loiola e Davi Araújo
+**Versão:** 1.1 — 20/10/2026
 **Base:** Documento de Requisitos Veridit v01.00 (REQ01–REQ15, D1, D2, Apêndice A)
 
 ---
@@ -532,7 +532,7 @@ requisitos relacionados.
 
 ## 13. Telas da aplicação
 
-Protótipo no Figma a ser produzido na próxima etapa.
+O protótipo das 14 telas está em [`entregas/veridit-telas.pdf`](../../entregas/veridit-telas.pdf): entrar, criar conta, recuperar senha, criar nova senha, meus registros, comprar créditos, dados de faturamento, pagamento, pagamento confirmado, novo registro, sessão de captura, selagem da evidência, detalhes do registro e relatório.
 
 ---
 
