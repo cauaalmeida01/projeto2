@@ -10,7 +10,8 @@ O Veridit é uma plataforma para registrar conteúdo de sites (imagem da tela ou
 | Arquivo | Conteúdo |
 |---|---|
 | [entregas/veridit-documento-arquitetural.pdf](entregas/veridit-documento-arquitetural.pdf) | Documento arquitetural completo (PDF) |
-| [entregas/veridit-apresentacao-arquitetura.pptx](entregas/veridit-apresentacao-arquitetura.pptx) | Apresentação (PowerPoint) |
+| [entregas/veridit-apresentacao-arquitetura.pdf](entregas/veridit-apresentacao-arquitetura.pdf) | Apresentação (PDF) |
+| [entregas/veridit-apresentacao-arquitetura.pptx](entregas/veridit-apresentacao-arquitetura.pptx) | Apresentação (PowerPoint, mesma versão do PDF) |
 | [entregas/veridit-telas.pdf](entregas/veridit-telas.pdf) | Telas da aplicação |
 
 ## Documentação
